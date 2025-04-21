@@ -19,14 +19,25 @@ public class LiteratureApp {
         };
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a number between 1 and 10 to see a quote: ");
-        int choice = scanner.nextInt();
 
-        // Display the selected quote
-        if (choice >= 1 && choice <= 10) {
-            System.out.println("Quote: " + quotes[choice - 1]);
-        } else {
-            System.out.println("Invalid choice! Please select a number between 1 and 10.");
+        while (true) {
+            try {
+                System.out.print("Enter a number between 1 and 10 to see a quote (or 0 to quit): ");
+                int choice = scanner.nextInt();
+
+                if (choice == 0) {
+                    System.out.println("Exiting the program. Goodbye!");
+                    break;
+                }
+
+                // Display the selected quote
+                System.out.println("Quote: " + quotes[choice - 1]);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Invalid choice! Please select a number between 1 and 10.");
+            } catch (Exception e) {
+                System.out.println("Error: Please enter a valid number.");
+                scanner.nextLine(); // Clear invalid input
+            }
         }
 
         scanner.close();
