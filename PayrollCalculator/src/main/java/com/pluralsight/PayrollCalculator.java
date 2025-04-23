@@ -1,48 +1,54 @@
 package com.pluralsight;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class PayrollCalculator {
     public static void main(String[] args) {
-        String csvFile = "src/main/resources/employees.csv"; // Path to your CSV file
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt user for input and output file names
+        System.out.print("Enter the name and path of the employee file to process: "); // if user dont enter path it does not work
+
+        String inputFile = scanner.nextLine();
+
+        System.out.print("Enter the name of the payroll file to create: ");
+        String outputFile = scanner.nextLine();
+
         List<Employee> employees = new ArrayList<>();
 
-        // Read the file using BufferedReader
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String line;
-            line = br.readLine();//read header dont try to parse id -- it gives error as "id" is string not integer
+        // Read employee data from input CSV file
+        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
+            String line = br.readLine(); // Skip header line
             while ((line = br.readLine()) != null) {
-                // Split the line by the pipe (|) delimiter
                 String[] data = line.split("\\|");
-
-                // Parse the data
                 int id = Integer.parseInt(data[0]);
                 String name = data[1];
                 double hoursWorked = Double.parseDouble(data[2]);
                 double payRate = Double.parseDouble(data[3]);
 
-                // Create an Employee object and add it to the list
                 Employee employee = new Employee(id, name, hoursWorked, payRate);
                 employees.add(employee);
             }
         } catch (IOException e) {
             System.out.println("Error reading the file: " + e.getMessage());
+            return;
         }
 
-        // Display payroll information for each employee
-        System.out.println("Payroll Information:");
-        for (Employee employee : employees) {
-            System.out.println("Employee ID: " + employee.getEmployeeId());
-            System.out.println("Name: " + employee.getName());
-            System.out.println("Gross Pay: $" + employee.getGrossPay());
-            System.out.println("-----------------------------");
+        // Write payroll information to output file
+        try {
+            if (outputFile.endsWith(".json")) {
+                writeJson(employees, outputFile);
+            } else {
+                writeCsv(employees, outputFile);
+            }
+            System.out.println("Payroll file created successfully: " + outputFile);
+        } catch (IOException e) {
+            System.out.println("Error writing the file: " + e.getMessage());
         }
     }
-}
 
     private static void writeCsv(List<Employee> employees, String filename) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
