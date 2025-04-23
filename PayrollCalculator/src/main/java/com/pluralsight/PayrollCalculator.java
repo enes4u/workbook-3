@@ -43,3 +43,27 @@ public class PayrollCalculator {
         }
     }
 }
+
+    private static void writeCsv(List<Employee> employees, String filename) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            writer.println("id|name|gross pay");
+            for (Employee e : employees) {
+                writer.printf("%d|%s|%.2f%n", e.getEmployeeId(), e.getName(), e.getGrossPay());
+            }
+        }
+    }
+// JSON file write
+    private static void writeJson(List<Employee> employees, String filename) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            writer.println("[");
+            for (int i = 0; i < employees.size(); i++) {
+                Employee e = employees.get(i);
+                writer.printf("  { \"id\": %d, \"name\" : \"%s\", \"grossPay\" : %.2f }",
+                        e.getEmployeeId(), e.getName(), e.getGrossPay());
+                if (i < employees.size() - 1) writer.println(",");
+                else writer.println();
+            }
+            writer.println("]");
+        }
+    }
+}
