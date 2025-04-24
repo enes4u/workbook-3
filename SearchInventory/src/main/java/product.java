@@ -37,7 +37,7 @@ class Product {
     }
 
     // Method to load inventory
-    //  bonus1
+
     public static ArrayList<Product> getInventory() {
         ArrayList<Product> inventory = new ArrayList<>();
         String fileName = "src/main/resources/inventory.csv " ; // Replace with actual path if necessary "inventory.csv"
@@ -55,6 +55,7 @@ class Product {
             }
         } catch (IOException e) {
             System.out.println("Error reading inventory file: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return inventory;
